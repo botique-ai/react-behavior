@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc -w  | gsed -u 's/\\x1Bc//g'"
+    "dev": "tsc -w  | gsed -u 's/\\x1Bc//g'",
+    "build": "tsc",
+    "prepublish": "rm -rf ./lib && yarn run build"
   },
   "author": "",
   "license": "ISC",
