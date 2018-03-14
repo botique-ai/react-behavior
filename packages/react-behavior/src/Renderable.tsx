@@ -1,5 +1,3 @@
 import * as React from "react";
 
-export type Renderable<TProps> =
-  | React.ComponentClass<TProps>
-  | ((props: TProps) => JSX.Element | null);
+export type Renderable<TProps> = (props: TProps) => JSX.Element | null;

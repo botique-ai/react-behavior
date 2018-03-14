@@ -22,9 +22,9 @@ export class State extends React.PureComponent<StateProps, {}> {
   }
 
   render() {
-    const ToRender = this.props.children;
-    return (
-        <ToRender state={this.state} setState={this.setState.bind(this)} />
-    );
+    return this.props.children({
+      state: this.state,
+      setState: this.setState.bind(this)
+    });
   }
 }

@@ -8,22 +8,14 @@ export function ComposeTwo<T1, T2>(props: {
 }) {
   const BehaviorOne = props.behaviors[0][1];
   const BehaviorTwo = props.behaviors[1][1];
-  return (
-    <BehaviorOne>
-      {behaviorOne => (
-        <BehaviorTwo>
-          {behaviorTwo => (
-            <props.children
-              {...{
-                [props.behaviors[0][0]]: behaviorOne,
-                [props.behaviors[1][0]]: behaviorTwo
-              } as any}
-            />
-          )}
-        </BehaviorTwo>
-      )}
-    </BehaviorOne>
-  );
+  return BehaviorOne({
+    children: behaviorOne => BehaviorTwo({
+      children: behaviorTwo => props.children({
+        [props.behaviors[0][0]]: behaviorOne,
+        [props.behaviors[1][0]]: behaviorTwo
+      } as any)
+    })
+  })
 }
 
 export function Compose(
@@ -35,11 +27,11 @@ export function Compose(
   if (behaviorsEntries.length === 1) {
     const ToRenderOuter = behaviorsEntries[0][1];
     return (
-      <ToRenderOuter
-        render={result => (
-          <ToRender {...{ [behaviorsEntries[0][0]]: result }} />
-        )}
-      />
+      <ToRenderOuter>
+        {result => (
+            <ToRender {...{ [behaviorsEntries[0][0]]: result }} />
+          )}
+      </ToRenderOuter>
     );
   } else if (behaviorsEntries.length === 2) {
     return (
@@ -56,7 +48,7 @@ export function Compose(
     const ComposedBehavior = behaviorsEntries.reduce(
       ([prevKey, prevBehavior], [key, behavior]) => [
         key,
-        ({ render: innerRender }) => (
+        ({ children: innerRender }) => (
           <ComposeTwo behaviors={[[prevKey, prevBehavior], [key, behavior]]}>
             {innerRender}
           </ComposeTwo>
@@ -64,6 +56,6 @@ export function Compose(
       ]
     )[1];
 
-    return <ComposedBehavior render={ToRender} />;
+    return <ComposedBehavior children={ToRender} />;
   }
 }

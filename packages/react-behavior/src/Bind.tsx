@@ -1,11 +1,10 @@
 import * as React from "react";
 import { Behavior } from "./Behavior";
+import { Renderable } from "./Renderable";
 
-export function Bind<TProps, TSpec extends {}>(
-  ToRender: Behavior<any, TSpec>,
-  props: TProps
-): Behavior<any, Partial<TSpec>> {
-  return (runProps: TSpec) => (
-    <ToRender {...{ ...(props as any), ...(runProps as any) }} />
-  );
+export function Bind<TSpec extends {}>(
+  toRender: Renderable<TSpec>,
+  props: Partial<TSpec>
+): Renderable<Partial<TSpec>> {
+  return (runProps: TSpec) => (toRender({ ...(props as any), ...(runProps as any) }));
 }
